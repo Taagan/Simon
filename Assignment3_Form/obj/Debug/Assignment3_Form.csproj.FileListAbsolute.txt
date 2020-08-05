@@ -1,0 +1,29 @@
+C:\Users\Stikkan\Documents\Visual Studio 2017\Projects\Assignment3_Form\Assignment3_Form\bin\Debug\Assignment3_Form.exe.config
+C:\Users\Stikkan\Documents\Visual Studio 2017\Projects\Assignment3_Form\Assignment3_Form\bin\Debug\Assignment3_Form.exe
+C:\Users\Stikkan\Documents\Visual Studio 2017\Projects\Assignment3_Form\Assignment3_Form\bin\Debug\Assignment3_Form.pdb
+C:\Users\Stikkan\Documents\Visual Studio 2017\Projects\Assignment3_Form\Assignment3_Form\obj\Debug\Assignment3_Form.Form1.resources
+C:\Users\Stikkan\Documents\Visual Studio 2017\Projects\Assignment3_Form\Assignment3_Form\obj\Debug\Assignment3_Form.Properties.Resources.resources
+C:\Users\Stikkan\Documents\Visual Studio 2017\Projects\Assignment3_Form\Assignment3_Form\obj\Debug\Assignment3_Form.csproj.GenerateResource.cache
+C:\Users\Stikkan\Documents\Visual Studio 2017\Projects\Assignment3_Form\Assignment3_Form\obj\Debug\Assignment3_Form.csproj.CoreCompileInputs.cache
+C:\Users\Stikkan\Documents\Visual Studio 2017\Projects\Assignment3_Form\Assignment3_Form\obj\Debug\Assignment3_Form.exe
+C:\Users\Stikkan\Documents\Visual Studio 2017\Projects\Assignment3_Form\Assignment3_Form\obj\Debug\Assignment3_Form.pdb
+C:\Users\tim\Desktop\Assignment3_Form\Assignment3_Form\bin\Debug\Assignment3_Form.exe.config
+C:\Users\tim\Desktop\Assignment3_Form\Assignment3_Form\bin\Debug\Assignment3_Form.exe
+C:\Users\tim\Desktop\Assignment3_Form\Assignment3_Form\bin\Debug\Assignment3_Form.pdb
+C:\Users\tim\Desktop\Assignment3_Form\Assignment3_Form\obj\Debug\Assignment3_Form.csprojAssemblyReference.cache
+C:\Users\tim\Desktop\Assignment3_Form\Assignment3_Form\obj\Debug\Assignment3_Form.Form1.resources
+C:\Users\tim\Desktop\Assignment3_Form\Assignment3_Form\obj\Debug\Assignment3_Form.Properties.Resources.resources
+C:\Users\tim\Desktop\Assignment3_Form\Assignment3_Form\obj\Debug\Assignment3_Form.csproj.GenerateResource.cache
+C:\Users\tim\Desktop\Assignment3_Form\Assignment3_Form\obj\Debug\Assignment3_Form.csproj.CoreCompileInputs.cache
+C:\Users\tim\Desktop\Assignment3_Form\Assignment3_Form\obj\Debug\Assignment3_Form.exe
+C:\Users\tim\Desktop\Assignment3_Form\Assignment3_Form\obj\Debug\Assignment3_Form.pdb
+C:\Users\tim\Documents\GitHub\Assignment3\Assignment3_Form\bin\Debug\Assignment3_Form.exe.config
+C:\Users\tim\Documents\GitHub\Assignment3\Assignment3_Form\bin\Debug\Assignment3_Form.exe
+C:\Users\tim\Documents\GitHub\Assignment3\Assignment3_Form\bin\Debug\Assignment3_Form.pdb
+C:\Users\tim\Documents\GitHub\Assignment3\Assignment3_Form\obj\Debug\Assignment3_Form.csprojAssemblyReference.cache
+C:\Users\tim\Documents\GitHub\Assignment3\Assignment3_Form\obj\Debug\Assignment3_Form.Form1.resources
+C:\Users\tim\Documents\GitHub\Assignment3\Assignment3_Form\obj\Debug\Assignment3_Form.Properties.Resources.resources
+C:\Users\tim\Documents\GitHub\Assignment3\Assignment3_Form\obj\Debug\Assignment3_Form.csproj.GenerateResource.cache
+C:\Users\tim\Documents\GitHub\Assignment3\Assignment3_Form\obj\Debug\Assignment3_Form.csproj.CoreCompileInputs.cache
+C:\Users\tim\Documents\GitHub\Assignment3\Assignment3_Form\obj\Debug\Assignment3_Form.exe
+C:\Users\tim\Documents\GitHub\Assignment3\Assignment3_Form\obj\Debug\Assignment3_Form.pdb
