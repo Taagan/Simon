@@ -17,7 +17,7 @@ namespace Assignment3_Form
         List<Item> icaStorage = new List<Item>();
         Random ran = new Random();
         bool scan, arla, axFood,ica, coop, cityGross,storageCheck = true;
-        int icaCurrentItems, icaCurrentWeights, icaCurrentVolumes;
+        double icaCurrentItems, icaCurrentWeights, icaCurrentVolumes;
         public Form1()
         {
             InitializeComponent();
@@ -46,15 +46,18 @@ namespace Assignment3_Form
                 Thread.Sleep(100);
                 if (storage.Count >= 50)
                 {
-                    MessageBox.Show("FULL");
-                    scan = false;
+
                 }
                 else
                 {
-                    storage.Add(new Item("bread", 1, 3));
+                    storage.Add(new Item("bread", 1, 1));
                 }
             }
-
+            MethodInvoker inv = delegate
+            {
+                lblStatusScan.Text = "Waiting";
+            };
+            Invoke(inv);
         }
         public void TakeFromStorage()
         {
@@ -69,14 +72,66 @@ namespace Assignment3_Form
                     icaCurrentWeights += item.weight;
                     icaCurrentVolumes += item.volume;
                 }
-                if (int.Parse(lblIcaItem.Text) == icaCurrentItems|| int.Parse(lblIcaWeight.Text) == icaCurrentWeights || int.Parse(lblIcaVolume.Text) <= icaCurrentVolumes)
+
+                if (storage.Count > 0 && (double.Parse(lblIcaItem.Text) <= icaCurrentItems || double.Parse(lblIcaWeight.Text) <= icaCurrentWeights + storage[storage.Count - 1].weight || double.Parse(lblIcaVolume.Text) <= icaCurrentVolumes + storage[storage.Count - 1].volume))
                 {
-                    MessageBox.Show(icaCurrentItems.ToString() + icaCurrentWeights.ToString() + icaCurrentVolumes.ToString());
+                    //MessageBox.Show(icaCurrentItems.ToString()+"    " + icaCurrentWeights.ToString() + "    " + icaCurrentVolumes.ToString());
+                    MethodInvoker inv = delegate
+                    {
+                        lblIcaStatus.Text = "Limit reached";
+                        Thread.Sleep(1000);
+                        icaStorage.Clear();
+                        lstIca.Items.Clear();
+
+                    };
+                    Invoke(inv);
+                    MethodInvoker inv2 = delegate
+                    {
+                        lblIcaStatus.Text = "Shipping";
+                        Thread.Sleep(4000);
+                    };
+                    Invoke(inv);
+                    if (chkIcaCont.Checked)
+                    {
+                    }
+                    else
+                    {
+                        MethodInvoker inv3 = delegate
+                        {
+                            lblIcaStatus.Text = "Waiting";
+                        };
+                        Invoke(inv);
+                        ica = false;
+
+                    }
                 }
                 else
                 {
-                    icaStorage.Add(storage[storage.Count - 1]);
-                    storage.Remove(storage[storage.Count - 1]);
+                    if (storage.Count > 0)
+                    {
+                        icaStorage.Add(storage[storage.Count - 1]);
+                        storage.Remove(storage[storage.Count - 1]);
+                        foreach (Item item in icaStorage)
+                        {
+                            MethodInvoker inv = delegate
+                            {
+                                lstIca.Items.Add(item.name);
+                                lblIcaStatus.Text = "Loading";
+
+                            };
+                            Invoke(inv);
+                        }
+                    }
+                    else
+                    {
+                        MethodInvoker inv = delegate
+                        {
+                            lblIcaStatus.Text = "Waiting";
+
+                        };
+                        Invoke(inv);
+                        Thread.Sleep(100);
+                    }
                 }
             }
         }
@@ -93,6 +148,7 @@ namespace Assignment3_Form
             scan = true;
             btnStopScan.Enabled = true;
             btnStartScan.Enabled = false;
+            lblStatusScan.Text = "Producing";
         }
 
         /// <summary>
@@ -122,6 +178,9 @@ namespace Assignment3_Form
         /// <param name="e"></param>
         private void btnStopScan_Click(object sender, EventArgs e)
         {
+            scan = false;
+            btnStopScan.Enabled = false;
+            btnStartScan.Enabled = true;
 
         }
 
@@ -130,8 +189,8 @@ namespace Assignment3_Form
             threadStorage = new Thread(StorageCheck);
             threadStorage.Start();
             lblIcaItem.Text = "15";
-            lblIcaWeight.Text = "27.00";
-            lblIcaVolume.Text = "12.50";
+            lblIcaWeight.Text = "27,00";
+            lblIcaVolume.Text = "12,50";
         }
 
         /// <summary>

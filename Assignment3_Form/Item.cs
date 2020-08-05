@@ -11,10 +11,10 @@ namespace Assignment3_Form
 {
     class Item
     {
-        string name;
-        public int weight, volume;
+        public string name;
+        public double weight, volume;
         float productionTime;
-        public Item(string name, int weight, int volume)
+        public Item(string name, double weight, double volume)
         {
             this.name = name;
             this.weight = weight;
