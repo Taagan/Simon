@@ -18,6 +18,7 @@ namespace Assignment3_Form
         Random ran = new Random();
         bool scan, arla, axFood,ica, coop, cityGross,storageCheck = true;
         double icaCurrentItems, icaCurrentWeights, icaCurrentVolumes;
+        static System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
         public Form1()
         {
             InitializeComponent();
@@ -75,34 +76,28 @@ namespace Assignment3_Form
 
                 if (storage.Count > 0 && (double.Parse(lblIcaItem.Text) <= icaCurrentItems || double.Parse(lblIcaWeight.Text) <= icaCurrentWeights + storage[storage.Count - 1].weight || double.Parse(lblIcaVolume.Text) <= icaCurrentVolumes + storage[storage.Count - 1].volume))
                 {
-                    //MessageBox.Show(icaCurrentItems.ToString()+"    " + icaCurrentWeights.ToString() + "    " + icaCurrentVolumes.ToString());
                     MethodInvoker inv = delegate
                     {
-                        lblIcaStatus.Text = "Limit reached";
-                        Thread.Sleep(1000);
+                        lblIcaStatus.Text = "Limit Reached";
                         icaStorage.Clear();
                         lstIca.Items.Clear();
+                    };
+                    Invoke(inv);
 
-                    };
-                    Invoke(inv);
-                    MethodInvoker inv2 = delegate
-                    {
-                        lblIcaStatus.Text = "Shipping";
-                        Thread.Sleep(4000);
-                    };
-                    Invoke(inv);
                     if (chkIcaCont.Checked)
                     {
+                            Thread.Sleep(5000);
                     }
                     else
                     {
                         MethodInvoker inv3 = delegate
                         {
                             lblIcaStatus.Text = "Waiting";
+
                         };
                         Invoke(inv);
                         ica = false;
-
+                        threadICA.Interrupt();
                     }
                 }
                 else
@@ -117,7 +112,6 @@ namespace Assignment3_Form
                             {
                                 lstIca.Items.Add(item.name);
                                 lblIcaStatus.Text = "Loading";
-
                             };
                             Invoke(inv);
                         }
