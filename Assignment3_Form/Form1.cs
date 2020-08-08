@@ -13,6 +13,7 @@ namespace Assignment3_Form
     public partial class Form1 : Form
     {
         Thread threadScan, threadArla, threadaxFood,threadICA,threadCOOP,threadCityGross,threadStorage;
+        Semaphore semaphoreObject = new Semaphore(1,1);
         List<Item> storage = new List<Item>();
         List<Item> icaStorage = new List<Item>();
         Random ran = new Random();
@@ -62,6 +63,7 @@ namespace Assignment3_Form
         }
         public void TakeFromStorage()
         {
+            semaphoreObject.WaitOne();
             while (ica)
             {
                 Thread.Sleep(50);
@@ -86,7 +88,7 @@ namespace Assignment3_Form
 
                     if (chkIcaCont.Checked)
                     {
-                            Thread.Sleep(5000);
+                        Thread.Sleep(5000);
                     }
                     else
                     {
@@ -97,8 +99,9 @@ namespace Assignment3_Form
                         };
                         Invoke(inv);
                         ica = false;
-                        threadICA.Interrupt();
+                        //threadICA.Interrupt();
                     }
+                    semaphoreObject.Release();
                 }
                 else
                 {
@@ -177,7 +180,7 @@ namespace Assignment3_Form
             btnStartScan.Enabled = true;
 
         }
-
+        
         private void btnStart_Click(object sender, EventArgs e)
         {
             threadStorage = new Thread(StorageCheck);
