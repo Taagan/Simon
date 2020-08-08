@@ -737,17 +737,18 @@
             this.lblMax.AutoSize = true;
             this.lblMax.Location = new System.Drawing.Point(6, 42);
             this.lblMax.Name = "lblMax";
-            this.lblMax.Size = new System.Drawing.Size(106, 13);
+            this.lblMax.Size = new System.Drawing.Size(118, 13);
             this.lblMax.TabIndex = 1;
-            this.lblMax.Text = "Max kapacity (items):";
+            this.lblMax.Text = "Max kapacity (items):50";
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(664, 435);
+            this.btnStart.Font = new System.Drawing.Font("Yu Gothic UI", 150F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnStart.Location = new System.Drawing.Point(1, 0);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(57, 57);
+            this.btnStart.Size = new System.Drawing.Size(712, 486);
             this.btnStart.TabIndex = 3;
-            this.btnStart.Text = "Activate";
+            this.btnStart.Text = "START";
             this.btnStart.UseVisualStyleBackColor = true;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 

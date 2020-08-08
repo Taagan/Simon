@@ -12,7 +12,7 @@ namespace Assignment3_Form
 {
     public partial class Form1 : Form
     {
-        Thread threadScan, threadArla, threadAxFood,threadICA,threadCOOP,threadCityGross,threadStorage;
+        Thread threadScan, threadArla, threadAxFood,threadICA,threadCOOP,threadCityGross, threadStorage;
         Semaphore semaphoreObject = new Semaphore(1,1);
         List<Item> storage = new List<Item>();
         List<Item> icaStorage = new List<Item>();
@@ -21,7 +21,7 @@ namespace Assignment3_Form
 
         Random ran = new Random();
         Item item = new Item("test", 1, 1);
-        bool scan, arla, axFood,ica, coop, cityGross,storageCheck = true;
+        bool scan, arla, axFood,ica, coop, cityGross,continueIca,continueCoop,continueCity,storageCheck = true;
         double icaCurrentItems, icaCurrentWeights, icaCurrentVolumes, coopCurrentItems, coopCurrentWeights, coopCurrentVolumes, cityGrossCurrentItems, cityGrossCurrentWeights, cityGrossCurrentVolumes;
         static System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
         public Form1()
@@ -32,16 +32,29 @@ namespace Assignment3_Form
             item.AddArlaProducts();
             item.AddScanProducts();
             item.AddAxFoodProducts();
+            lblIcaItem.Text = "13";
+            lblIcaWeight.Text = "12,00";
+            lblIcaVolume.Text = "30,50";
+
+            lblCoopItem.Text = "10";
+            lblCoopWeight.Text = "27,00";
+            lblCoopVolume.Text = "13,50";
+
+            lblCityItem.Text = "30";
+            lblCityWeight.Text = "50,10";
+            lblCityVolume.Text = "43,51";
+            progressItems.Value = 0;
+
         }
 
         public void GetRandomItem()
         {
-            
         }
         public void StorageCheck()
         {
             while (storageCheck)
             {
+
                 MethodInvoker inv = delegate
                 {
                     progressItems.Value = storage.Count;
@@ -54,7 +67,7 @@ namespace Assignment3_Form
         {
             while (scan)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
                 if (storage.Count >= 50)
                 {
 
@@ -77,7 +90,7 @@ namespace Assignment3_Form
         {
             while (arla)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
                 if (storage.Count >= 50)
                 {
 
@@ -101,7 +114,7 @@ namespace Assignment3_Form
         {
             while (axFood)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
                 if (storage.Count >= 50)
                 {
 
@@ -124,7 +137,12 @@ namespace Assignment3_Form
 
         public void IcaTakeFromStorage()
         {
-            
+            MethodInvoker inv = delegate
+            {
+                lblIcaStatus.Text = "Waiting";
+
+            };
+            Invoke(inv);
             while (ica)
             {
                 semaphoreObject.WaitOne();
@@ -140,26 +158,19 @@ namespace Assignment3_Form
 
                 if (storage.Count > 0 && (double.Parse(lblIcaItem.Text) <= icaCurrentItems || double.Parse(lblIcaWeight.Text) <= icaCurrentWeights + storage[storage.Count - 1].weight || double.Parse(lblIcaVolume.Text) <= icaCurrentVolumes + storage[storage.Count - 1].volume))
                 {
-                    MethodInvoker inv = delegate
+                    MethodInvoker inv2 = delegate
                     {
                         lblIcaStatus.Text = "Limit Reached";
-                        icaStorage.Clear();
-                        lstIca.Items.Clear();
                     };
-                    Invoke(inv);
+                    Invoke(inv2);
 
                     if (chkIcaCont.Checked)
                     {
-                        
+                        continueIca = true;
+                        semaphoreObject.Release();
                     }
                     else
                     {
-                        MethodInvoker inv3 = delegate
-                        {
-                            lblIcaStatus.Text = "Waiting";
-
-                        };
-                        Invoke(inv);
                         ica = false;
                         //threadICA.Interrupt();
                     }
@@ -173,36 +184,73 @@ namespace Assignment3_Form
                     {
                         icaStorage.Add(storage[storage.Count - 1]);
                         storage.Remove(storage[storage.Count - 1]);
-                        foreach (Item item in icaStorage)
-                        {
-                            MethodInvoker inv = delegate
+
+                            MethodInvoker inv3 = delegate
                             {
-                                lstIca.Items.Add(item.name);
-                                lblIcaStatus.Text = "Loading";
+                                lstIca.Items.Clear();
+                                foreach (Item item in icaStorage)
+                                {
+                                    lstIca.Items.Add(item.name);
+                                    lblIcaStatus.Text = "Loading";
+                                }
                             };
-                            Invoke(inv);
-                        }
+                            Invoke(inv3);
+
                     }
                     else
                     {
-                        MethodInvoker inv = delegate
+                        MethodInvoker inv4 = delegate
                         {
                             lblIcaStatus.Text = "Waiting";
 
                         };
-                        Invoke(inv);
+                        Invoke(inv4);
                         Thread.Sleep(100);
                     }
                 }
-                semaphoreObject.Release();
-                
+                if (continueIca)
+                {
+                    Thread.Sleep(2000);
+                    MethodInvoker inv5 = delegate
+                    {
+                        lblIcaStatus.Text = "Waiting";
+                        icaStorage.Clear();
+                        lstIca.Items.Clear();
+                    };
+                    Invoke(inv5);
+
+                    Thread.Sleep(3000);
+                }
+                else
+                {
+                    semaphoreObject.Release();
+                }
+                continueIca = false;
             }
-            Thread.Sleep(5000);
+            Thread.Sleep(2000);
+            MethodInvoker inv6 = delegate
+            {
+                lblIcaStatus.Text = "Waiting";
+                if (storage.Count > 0 && (double.Parse(lblCityItem.Text) <= cityGrossCurrentItems ||
+                    double.Parse(lblCityWeight.Text) <= cityGrossCurrentWeights + storage[storage.Count - 1].weight ||
+                    double.Parse(lblCityVolume.Text) <= cityGrossCurrentVolumes + storage[storage.Count - 1].volume))
+                {
+                    icaStorage.Clear();
+                    lstIca.Items.Clear();
+                }
+            };
+            Invoke(inv6);
+
+            Thread.Sleep(3000);
         }
 
         public void CoopTakeFromStorage()
         {
-
+            MethodInvoker inv = delegate
+            {
+                lblCoopStatus.Text = "Waiting";
+            };
+            Invoke(inv);
             while (coop)
             {
                 semaphoreObject.WaitOne();
@@ -218,26 +266,20 @@ namespace Assignment3_Form
 
                 if (storage.Count > 0 && (double.Parse(lblCoopItem.Text) <= coopCurrentItems || double.Parse(lblCoopWeight.Text) <= coopCurrentWeights + storage[storage.Count - 1].weight || double.Parse(lblCoopVolume.Text) <= coopCurrentVolumes + storage[storage.Count - 1].volume))
                 {
-                    MethodInvoker inv = delegate
+                    MethodInvoker inv2 = delegate
                     {
                         lblCoopStatus.Text = "Limit Reached";
-                        coopStorage.Clear();
-                        lstCoop.Items.Clear();
                     };
-                    Invoke(inv);
+                    Invoke(inv2);
 
                     if (chkCoopCont.Checked)
                     {
-                        
+                        continueCoop = true;
+                        semaphoreObject.Release();
+
                     }
                     else
                     {
-                        MethodInvoker inv2 = delegate
-                        {
-                            lblCoopStatus.Text = "Waiting";
-
-                        };
-                        Invoke(inv);
                         coop = false;
                     }
 
@@ -250,36 +292,73 @@ namespace Assignment3_Form
                     {
                         coopStorage.Add(storage[storage.Count - 1]);
                         storage.Remove(storage[storage.Count - 1]);
-                        foreach (Item item in coopStorage)
+                        MethodInvoker inv3 = delegate
                         {
-                            MethodInvoker inv = delegate
+                            lstCoop.Items.Clear();
+                            foreach (Item item in coopStorage)
                             {
                                 lstCoop.Items.Add(item.name);
                                 lblCoopStatus.Text = "Loading";
-                            };
-                            Invoke(inv);
-                        }
+                            }
+                        };
+                        Invoke(inv3);
                     }
                     else
                     {
-                        MethodInvoker inv = delegate
+                        MethodInvoker inv4 = delegate
                         {
                             lblCoopStatus.Text = "Waiting";
 
                         };
-                        Invoke(inv);
+                        Invoke(inv4);
                         Thread.Sleep(100);
                     }
                 }
+                if (continueCoop)
+                {
+                    Thread.Sleep(2000);
+                    MethodInvoker inv5 = delegate
+                    {
+                        lblCoopStatus.Text = "Waiting";
+                        coopStorage.Clear();
+                        lstCoop.Items.Clear();
+                    };
+                    Invoke(inv5);
+
+                    Thread.Sleep(3000);
+
+                }
+                else
+                {
                 semaphoreObject.Release();
-               
+                }
+                continueCoop = false;
             }
-            Thread.Sleep(5000);
+            Thread.Sleep(2000);
+            MethodInvoker inv6 = delegate
+            {
+                lblCoopStatus.Text = "Waiting";
+                if (storage.Count > 0 && (double.Parse(lblCityItem.Text) <= cityGrossCurrentItems ||
+                    double.Parse(lblCityWeight.Text) <= cityGrossCurrentWeights + storage[storage.Count - 1].weight ||
+                    double.Parse(lblCityVolume.Text) <= cityGrossCurrentVolumes + storage[storage.Count - 1].volume))
+                {
+                    coopStorage.Clear();
+                    lstCoop.Items.Clear();
+                }
+            };
+            Invoke(inv6);
+
+            Thread.Sleep(3000);
         }
 
 
         public void CityGrossTakeFromStorage()
         {
+            MethodInvoker inv = delegate
+            {
+                lblCityStatus.Text = "Waiting";
+            };
+            Invoke(inv);
 
             while (cityGross)
             {
@@ -294,30 +373,25 @@ namespace Assignment3_Form
                     cityGrossCurrentVolumes += item.volume;
                 }
 
-                if (storage.Count > 0 && (double.Parse(lblCityItem.Text) <= cityGrossCurrentItems || double.Parse(lblCityWeight.Text) <= cityGrossCurrentWeights + storage[storage.Count - 1].weight || double.Parse(lblCityVolume.Text) <= cityGrossCurrentVolumes + storage[storage.Count - 1].volume))
+                if (storage.Count > 0 && (double.Parse(lblCityItem.Text) <= cityGrossCurrentItems ||
+                    double.Parse(lblCityWeight.Text) <= cityGrossCurrentWeights + storage[storage.Count - 1].weight ||
+                    double.Parse(lblCityVolume.Text) <= cityGrossCurrentVolumes + storage[storage.Count - 1].volume))
                 {
-                    MethodInvoker inv = delegate
+                    MethodInvoker inv2 = delegate
                     {
                         lblCityStatus.Text = "Limit Reached";
-                        cityGrossStorage.Clear();
-                        lstCity.Items.Clear();
                     };
-                    Invoke(inv);
+                    Invoke(inv2);
 
                     if (chkCityCont.Checked)
                     {
-                        
+                        continueCity = true;
+                        semaphoreObject.Release();
+
                     }
                     else
                     {
-                        MethodInvoker inv3 = delegate
-                        {
-                            lblCityStatus.Text = "Waiting";
-
-                        };
-                        Invoke(inv);
                         cityGross = false;
-                        //threadICA.Interrupt();
                     }
 
 
@@ -329,31 +403,63 @@ namespace Assignment3_Form
                     {
                         cityGrossStorage.Add(storage[storage.Count - 1]);
                         storage.Remove(storage[storage.Count - 1]);
-                        foreach (Item item in cityGrossStorage)
+                        MethodInvoker inv3 = delegate
                         {
-                            MethodInvoker inv = delegate
+                            lstCity.Items.Clear();
+                            foreach (Item item in cityGrossStorage)
                             {
                                 lstCity.Items.Add(item.name);
                                 lblCityStatus.Text = "Loading";
-                            };
-                            Invoke(inv);
-                        }
+                            }
+                        };
+                        Invoke(inv3);
                     }
                     else
                     {
-                        MethodInvoker inv = delegate
+                        MethodInvoker inv4 = delegate
                         {
                             lblCityStatus.Text = "Waiting";
 
                         };
-                        Invoke(inv);
+                        Invoke(inv4);
                         Thread.Sleep(100);
                     }
                 }
+                if (continueCity)
+                {
+                    Thread.Sleep(2000);
+                    MethodInvoker inv5 = delegate
+                    {
+                        lblCityStatus.Text = "Waiting";
+                        cityGrossStorage.Clear();
+                        lstCity.Items.Clear();
+                    };
+                    Invoke(inv5);
+
+                    Thread.Sleep(3000);
+                }
+                else
+                {
                 semaphoreObject.Release();
+                }
+                continueCity = false;
                 
             }
-            Thread.Sleep(5000);
+            Thread.Sleep(2000);
+            MethodInvoker inv6 = delegate
+            {
+                lblCityStatus.Text = "Waiting";
+                if (storage.Count > 0 && (double.Parse(lblCityItem.Text) <= cityGrossCurrentItems ||
+                    double.Parse(lblCityWeight.Text) <= cityGrossCurrentWeights + storage[storage.Count - 1].weight ||
+                    double.Parse(lblCityVolume.Text) <= cityGrossCurrentVolumes + storage[storage.Count - 1].volume))
+                {
+                cityGrossStorage.Clear();
+                lstCity.Items.Clear();
+                }
+            };
+            Invoke(inv6);
+
+            Thread.Sleep(3000);
         }
 
 
@@ -387,6 +493,7 @@ namespace Assignment3_Form
             btnStopArla.Enabled = true;
             btnStartArla.Enabled = false;
             lblStatusArla.Text = "Producing";
+
         }
 
         /// <summary>
@@ -402,6 +509,7 @@ namespace Assignment3_Form
             btnStopAxfood.Enabled = true;
             btnStartAxfood.Enabled = false;
             lblStatusAxfood.Text = "Producing";
+
         }
 
         /// <summary>
@@ -421,17 +529,7 @@ namespace Assignment3_Form
         {
             threadStorage = new Thread(StorageCheck);
             threadStorage.Start();
-            lblIcaItem.Text = "13";
-            lblIcaWeight.Text = "12,00";
-            lblIcaVolume.Text = "30,50";
-
-            lblCoopItem.Text = "10";
-            lblCoopWeight.Text = "27,00";
-            lblCoopVolume.Text = "13,50";
-
-            lblCityItem.Text = "30";
-            lblCityWeight.Text = "50,10";
-            lblCityVolume.Text = "43,51";
+            btnStart.Visible = false;
         }
 
         /// <summary>
@@ -468,7 +566,8 @@ namespace Assignment3_Form
             threadICA = new Thread(IcaTakeFromStorage);
             threadICA.Start();
             ica = true;
-
+            btnStartIca.Enabled = false;
+            btnStopIca.Enabled = true;
         }
 
         /// <summary>
@@ -479,6 +578,7 @@ namespace Assignment3_Form
         private void btnStopIca_Click(object sender, EventArgs e)
         {
             ica = false;
+            btnStartIca.Enabled = true;
         }
 
         /// <summary>
@@ -491,6 +591,9 @@ namespace Assignment3_Form
             threadCOOP = new Thread(CoopTakeFromStorage);
             threadCOOP.Start();
             coop = true;
+            btnStartCoop.Enabled = false;
+            btnStopCoop.Enabled = true;
+
         }
 
         /// <summary>
@@ -501,6 +604,9 @@ namespace Assignment3_Form
         private void btnStopCoop_Click(object sender, EventArgs e)
         {
             coop = false;
+            btnStartCoop.Enabled = true;
+            btnStopCoop.Enabled = false;
+
         }
 
         /// <summary>
@@ -513,6 +619,9 @@ namespace Assignment3_Form
             threadCityGross = new Thread(CityGrossTakeFromStorage);
             threadCityGross.Start();
             cityGross = true;
+            btnStartCity.Enabled = false;
+            btnStopCity.Enabled = true;
+
         }
 
         /// <summary>
@@ -523,6 +632,8 @@ namespace Assignment3_Form
         private void btnStopCity_Click(object sender, EventArgs e)
         {
             cityGross = false;
+            btnStartCity.Enabled = true;
+            btnStopCity.Enabled = false;
         }
 
         /// <summary>
