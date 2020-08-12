@@ -84,7 +84,6 @@ namespace Assignment3_Form
             
             while (run)
             {
-                semaphoreProducer.WaitOne();
                 Thread.Sleep(1000);
                 buffer.WaitOne();
                     if (storage.Count >= 50)
@@ -101,7 +100,6 @@ namespace Assignment3_Form
                     }
 
                 buffer.ReleaseMutex();
-                semaphoreProducer.WaitOne();
 
                 MethodInvoker inv = delegate
                 {
@@ -165,8 +163,10 @@ namespace Assignment3_Form
             double tempMaxNumber = 0;
 
 
-            if (id == "ica")
-            {
+
+            
+                if (id == "ica")
+             {
                 tempMaxVol = icaMaxVol;
                 tempMaxNumber = icaMaxAmount;
                 tempMaxWeight = icaMaxWeight;
@@ -201,6 +201,8 @@ namespace Assignment3_Form
                     currentVolumes += item.volume;
                 }
             }
+
+           
 
             while (run)
             {
@@ -286,7 +288,7 @@ namespace Assignment3_Form
                         }
                         else
                         {
-                            ica = false;
+                            run = false;
                         }
                     }
                     else if (id == "coop")
@@ -298,7 +300,7 @@ namespace Assignment3_Form
                         }
                         else
                         {
-                            coop = false;
+                            run = false;
                         }
                     }
                     else if (id == "cityGross")
@@ -310,7 +312,7 @@ namespace Assignment3_Form
                         }
                         else
                         {
-                            cityGross = false;
+                            run = false;
                         }
                     }
                 }
@@ -456,6 +458,8 @@ namespace Assignment3_Form
                 }
                 continueCoop = false;
 
+
+
                 if (continueCity && id == "cityGross")
                 {
                     Thread.Sleep(2000);
@@ -485,6 +489,7 @@ namespace Assignment3_Form
                 if (id == "ica")
                 {
                     lblIcaStatus.Text = "Waiting";
+                    
                 }
                 else if (id == "coop")
                 {
@@ -495,6 +500,8 @@ namespace Assignment3_Form
                     lblCityStatus.Text = "Waiting";
                 }
                
+
+
                 if (storage.Count > 0 && (tempMaxNumber <= currentItems ||
                     tempMaxWeight <= currentWeights + storage[storage.Count - 1].weight ||
                     tempMaxVol <= currentVolumes + storage[storage.Count - 1].volume))
