@@ -70,6 +70,7 @@ namespace Assignment3_Form
             while (scan)
             {
                 Thread.Sleep(1000);
+                buffer.WaitOne();
                 if (storage.Count >= 50)
                 {
 
@@ -80,12 +81,15 @@ namespace Assignment3_Form
                     temp = ran.Next(0, item.scanItems.Count);
                     storage.Add(item.scanItems[temp]);
                 }
+                buffer.ReleaseMutex();
+
             }
             MethodInvoker inv = delegate
             {
                 lblStatusScan.Text = "Waiting";
             };
             Invoke(inv);
+            
         }
 
         public void ArlaProduce()
@@ -93,6 +97,7 @@ namespace Assignment3_Form
             while (arla)
             {
                 Thread.Sleep(1000);
+                buffer.WaitOne();
                 if (storage.Count >= 50)
                 {
 
@@ -103,6 +108,7 @@ namespace Assignment3_Form
                     temp = ran.Next(0, item.arlaItems.Count);
                     storage.Add(item.arlaItems[temp]);
                 }
+                buffer.ReleaseMutex();
             }
             MethodInvoker inv = delegate
             {
@@ -117,6 +123,7 @@ namespace Assignment3_Form
             while (axFood)
             {
                 Thread.Sleep(1000);
+                buffer.WaitOne();
                 if (storage.Count >= 50)
                 {
 
@@ -127,6 +134,7 @@ namespace Assignment3_Form
                     temp = ran.Next(0, item.axFoodItems.Count);
                     storage.Add(item.axFoodItems[temp]);
                 }
+                buffer.ReleaseMutex();
             }
             MethodInvoker inv = delegate
             {
@@ -134,8 +142,6 @@ namespace Assignment3_Form
             };
             Invoke(inv);
         }
-
-
 
         public void IcaTakeFromStorage()
         {
@@ -176,17 +182,14 @@ namespace Assignment3_Form
                         ica = false;
                         //threadICA.Interrupt();
                     }
-                    
-
-                }
-            
+                }            
                 else
                 {
+                    buffer.WaitOne();
                     if (storage.Count > 0)
                     {
                         icaStorage.Add(storage[storage.Count - 1]);
                         storage.Remove(storage[storage.Count - 1]);
-
                             MethodInvoker inv3 = delegate
                             {
                                 lstIca.Items.Clear();
@@ -207,8 +210,9 @@ namespace Assignment3_Form
 
                         };
                         Invoke(inv4);
-                        Thread.Sleep(100);
                     }
+                    buffer.ReleaseMutex();
+                    Thread.Sleep(100);
                 }
                 if (continueIca)
                 {
@@ -220,7 +224,6 @@ namespace Assignment3_Form
                         lstIca.Items.Clear();
                     };
                     Invoke(inv5);
-
                     Thread.Sleep(3000);
                 }
                 else
@@ -229,21 +232,22 @@ namespace Assignment3_Form
                 }
                 continueIca = false;
             }
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
             MethodInvoker inv6 = delegate
             {
                 lblIcaStatus.Text = "Waiting";
-                if (storage.Count > 0 && (double.Parse(lblCityItem.Text) <= cityGrossCurrentItems ||
-                    double.Parse(lblCityWeight.Text) <= cityGrossCurrentWeights + storage[storage.Count - 1].weight ||
-                    double.Parse(lblCityVolume.Text) <= cityGrossCurrentVolumes + storage[storage.Count - 1].volume))
+                if (storage.Count > 0 && (double.Parse(lblIcaItem.Text) <= icaCurrentItems ||
+                double.Parse(lblIcaWeight.Text) <= icaCurrentWeights + storage[storage.Count - 1].weight ||
+                double.Parse(lblIcaVolume.Text) <= icaCurrentVolumes + storage[storage.Count - 1].volume))
                 {
                     icaStorage.Clear();
                     lstIca.Items.Clear();
                 }
+                btnStartIca.Enabled = true;
+                btnStopIca.Enabled = false;
             };
             Invoke(inv6);
 
-            Thread.Sleep(3000);
         }
 
         public void CoopTakeFromStorage()
@@ -290,6 +294,7 @@ namespace Assignment3_Form
 
                 else
                 {
+                    buffer.WaitOne();
                     if (storage.Count > 0)
                     {
                         coopStorage.Add(storage[storage.Count - 1]);
@@ -313,8 +318,9 @@ namespace Assignment3_Form
 
                         };
                         Invoke(inv4);
-                        Thread.Sleep(100);
                     }
+                    buffer.ReleaseMutex();
+                    Thread.Sleep(100);
                 }
                 if (continueCoop)
                 {
@@ -336,21 +342,22 @@ namespace Assignment3_Form
                 }
                 continueCoop = false;
             }
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
             MethodInvoker inv6 = delegate
             {
                 lblCoopStatus.Text = "Waiting";
-                if (storage.Count > 0 && (double.Parse(lblCityItem.Text) <= cityGrossCurrentItems ||
-                    double.Parse(lblCityWeight.Text) <= cityGrossCurrentWeights + storage[storage.Count - 1].weight ||
-                    double.Parse(lblCityVolume.Text) <= cityGrossCurrentVolumes + storage[storage.Count - 1].volume))
+                if (storage.Count > 0 && (double.Parse(lblCoopItem.Text) <= coopCurrentItems ||
+                double.Parse(lblCoopWeight.Text) <= coopCurrentWeights + storage[storage.Count - 1].weight ||
+                double.Parse(lblCoopVolume.Text) <= coopCurrentVolumes + storage[storage.Count - 1].volume))
                 {
                     coopStorage.Clear();
                     lstCoop.Items.Clear();
                 }
+                btnStartCoop.Enabled = true;
+                btnStopCoop.Enabled = false;
             };
             Invoke(inv6);
 
-            Thread.Sleep(3000);
         }
 
 
@@ -395,12 +402,10 @@ namespace Assignment3_Form
                     {
                         cityGross = false;
                     }
-
-
                 }
-
                 else
                 {
+                    buffer.WaitOne();
                     if (storage.Count > 0)
                     {
                         cityGrossStorage.Add(storage[storage.Count - 1]);
@@ -424,12 +429,14 @@ namespace Assignment3_Form
 
                         };
                         Invoke(inv4);
-                        Thread.Sleep(100);
                     }
+                    buffer.ReleaseMutex();
+                    Thread.Sleep(100);
+
                 }
                 if (continueCity)
                 {
-                    Thread.Sleep(2000);
+                    Thread.Sleep(5000);
                     MethodInvoker inv5 = delegate
                     {
                         lblCityStatus.Text = "Waiting";
@@ -447,7 +454,7 @@ namespace Assignment3_Form
                 continueCity = false;
                 
             }
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
             MethodInvoker inv6 = delegate
             {
                 lblCityStatus.Text = "Waiting";
@@ -458,10 +465,10 @@ namespace Assignment3_Form
                 cityGrossStorage.Clear();
                 lstCity.Items.Clear();
                 }
+                btnStartCity.Enabled = true;
+                btnStopCity.Enabled = false;
             };
             Invoke(inv6);
-
-            Thread.Sleep(3000);
         }
 
 
