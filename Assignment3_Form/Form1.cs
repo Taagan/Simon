@@ -13,7 +13,9 @@ namespace Assignment3_Form
     public partial class Form1 : Form
     {
         Thread threadScan, threadArla, threadAxFood,threadICA,threadCOOP,threadCityGross, threadStorage;
-        Semaphore semaphoreObject = new Semaphore(1,1);
+        Semaphore semaphoreProducer = new Semaphore(1,1);
+        Semaphore semaphoreConsumer = new Semaphore(1, 1);
+        Mutex buffer = new Mutex();
         List<Item> storage = new List<Item>();
         List<Item> icaStorage = new List<Item>();
         List<Item> cityGrossStorage = new List<Item>();
@@ -145,7 +147,7 @@ namespace Assignment3_Form
             Invoke(inv);
             while (ica)
             {
-                semaphoreObject.WaitOne();
+                semaphoreProducer.WaitOne();
                 Thread.Sleep(200);
                 icaCurrentWeights = 0;
                 icaCurrentVolumes = 0;
@@ -167,7 +169,7 @@ namespace Assignment3_Form
                     if (chkIcaCont.Checked)
                     {
                         continueIca = true;
-                        semaphoreObject.Release();
+                        semaphoreProducer.Release();
                     }
                     else
                     {
@@ -223,7 +225,7 @@ namespace Assignment3_Form
                 }
                 else
                 {
-                    semaphoreObject.Release();
+                    semaphoreProducer.Release();
                 }
                 continueIca = false;
             }
@@ -253,7 +255,7 @@ namespace Assignment3_Form
             Invoke(inv);
             while (coop)
             {
-                semaphoreObject.WaitOne();
+                semaphoreProducer.WaitOne();
                 Thread.Sleep(200);
                 coopCurrentWeights = 0;
                 coopCurrentVolumes = 0;
@@ -275,7 +277,7 @@ namespace Assignment3_Form
                     if (chkCoopCont.Checked)
                     {
                         continueCoop = true;
-                        semaphoreObject.Release();
+                        semaphoreProducer.Release();
 
                     }
                     else
@@ -330,7 +332,7 @@ namespace Assignment3_Form
                 }
                 else
                 {
-                semaphoreObject.Release();
+                semaphoreProducer.Release();
                 }
                 continueCoop = false;
             }
@@ -362,7 +364,7 @@ namespace Assignment3_Form
 
             while (cityGross)
             {
-                semaphoreObject.WaitOne();
+                semaphoreProducer.WaitOne();
                 Thread.Sleep(200);
                 cityGrossCurrentWeights = 0;
                 cityGrossCurrentVolumes = 0;
@@ -386,7 +388,7 @@ namespace Assignment3_Form
                     if (chkCityCont.Checked)
                     {
                         continueCity = true;
-                        semaphoreObject.Release();
+                        semaphoreProducer.Release();
 
                     }
                     else
@@ -440,7 +442,7 @@ namespace Assignment3_Form
                 }
                 else
                 {
-                semaphoreObject.Release();
+                semaphoreProducer.Release();
                 }
                 continueCity = false;
                 
