@@ -13,7 +13,7 @@ namespace Assignment3_Form
     public partial class Form1 : Form
     {
         Thread threadScan, threadArla, threadAxFood,threadICA,threadCOOP,threadCityGross, threadStorage;
-        //Semaphore semaphoreProducer = new Semaphore(1,1);
+        Semaphore semaphoreProducer = new Semaphore(1,1);
         Semaphore semaphoreConsumer = new Semaphore(1, 1);
         Mutex buffer = new Mutex();
         List<Item> storage = new List<Item>();
@@ -84,7 +84,7 @@ namespace Assignment3_Form
             
             while (run)
             {
-                
+                semaphoreProducer.WaitOne();
                 Thread.Sleep(1000);
                 buffer.WaitOne();
                     if (storage.Count >= 50)
@@ -101,29 +101,32 @@ namespace Assignment3_Form
                     }
 
                 buffer.ReleaseMutex();
+                semaphoreProducer.WaitOne();
+
+                MethodInvoker inv = delegate
+                {
+
+                    if (id == "arla")
+                    {
+                        lblStatusArla.Text = "Waiting";
+                        run = arla;
+                    }
+                    else if (id == "scan")
+                    {
+                        lblStatusScan.Text = "Waiting";
+                        run = scan;
+                    }
+                    else if (id == "axFood")
+                    {
+                        lblStatusAxfood.Text = "Waiting";
+                        run = axFood;
+                    }
+
+                };
+
+                Invoke(inv);
             }
-            MethodInvoker inv = delegate
-            {
-
-                if (id == "arla")
-                {
-                    lblStatusArla.Text = "Waiting";
-                    run = arla;
-                }
-                else if (id == "scan")
-                {
-                    lblStatusScan.Text = "Waiting";
-                    run = scan;
-                }
-                else if (id == "axFood")
-                {
-                    lblStatusAxfood.Text = "Waiting";
-                    run = axFood;
-                }
-                
-            };
-
-            Invoke(inv);
+           
             
         }
 
