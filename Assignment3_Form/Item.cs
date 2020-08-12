@@ -65,8 +65,47 @@ namespace Assignment3_Form
 
         }
 
+        public int GetItemAmount(string name)
+        {
+            if (name == "arla")
+            {
+                return arlaItems.Count;
+            }
+            else if (name == "scan")
+            {
+                return scanItems.Count;
+            }
+            else if (name == "axFood")
+            {
+                return axFoodItems.Count;
+            }
+            else
+            {
+                return 0;
+            }
 
+            
+        }
 
+        public Item GetLastItem(string name, int number)
+        {
+            if (name == "arla")
+            {
+                return arlaItems[number];
+            }
+            else if (name == "scan")
+            {
+                return scanItems[number];
+            }
+            else if (name == "axFood")
+            {
+                return axFoodItems[number];
+            }
+            else
+            {
+                return arlaItems[number]; //bör aldrig användas
+            }
+        }
 
         public void AddAxFoodProducts()
         {
