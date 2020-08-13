@@ -587,6 +587,7 @@ namespace Assignment3_Form
         private void btnStopIca_Click(object sender, EventArgs e)
         {
             ica = false;
+            btnStopIca.Enabled = false;
             btnStartIca.Enabled = true;
         }
 
