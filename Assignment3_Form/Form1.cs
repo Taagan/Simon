@@ -98,7 +98,6 @@ namespace Assignment3_Form
 
 
                     }
-
                 buffer.ReleaseMutex();
 
                 MethodInvoker inv = delegate
@@ -133,9 +132,7 @@ namespace Assignment3_Form
         {
             
             MethodInvoker inv = delegate
-            {
-                
-
+            {               
                 if (id == "ica")
                 {
                     lblIcaStatus.Text = "Waiting";
@@ -148,11 +145,8 @@ namespace Assignment3_Form
                 {
                     lblCityStatus.Text = "Waiting";
                 }
-
-
             };
             Invoke(inv);
-
 
             currentItems = 0;
             currentVolumes = 0;
@@ -161,10 +155,7 @@ namespace Assignment3_Form
             double tempMaxVol = 0;
             double tempMaxWeight = 0;
             double tempMaxNumber = 0;
-
-
-
-            
+        
                 if (id == "ica")
              {
                 tempMaxVol = icaMaxVol;
@@ -201,9 +192,6 @@ namespace Assignment3_Form
                     currentVolumes += item.volume;
                 }
             }
-
-           
-
             while (run)
             {
                 
@@ -255,10 +243,10 @@ namespace Assignment3_Form
                         currentVolumes += item.volume;
                     }
                 }
-
-
+                //When you've reached your limit this one excecutes
                 if (storage.Count > 0 && (tempMaxNumber <= currentItems || tempMaxWeight <= currentWeights + storage[storage.Count - 1].weight || tempMaxVol <= currentVolumes + storage[storage.Count - 1].volume))
                 {
+                    //Check which consumer you are then gives the status "Limit Reached"
                     MethodInvoker inv2 = delegate
                     {
                         if (id == "ica")
@@ -276,16 +264,17 @@ namespace Assignment3_Form
                        
                     };
                     Invoke(inv2);
-
-
-
+                    //Checks if you've got the "Continue" button checked
                     if (id == "ica")
                     {
+                        //If yes then we activate something called Continue which will allow the while loop to continue and therefor keep the thread alive
                         if (chkIcaCont.Checked)
-                        {
+                        {                           
                             continueIca = true;
+                            //We do release the thread from the semaphore so others can do their work while we wait to begin work again
                             semaphoreConsumer.Release();
                         }
+                        //Makes the while loop false, which means we exit the loop and await further orders
                         else
                         {
                             run = false;
@@ -316,15 +305,12 @@ namespace Assignment3_Form
                         }
                     }
                 }
-            
+                //If the consumers storage wasn't full then we add into our storage but first we need to enter our mutex
                 else
                 {
                     buffer.WaitOne();
                     if (storage.Count > 0)
                     {
-
-
-
                         if (id == "ica")
                         {
                             icaStorage.Add(storage[storage.Count - 1]);
@@ -373,9 +359,7 @@ namespace Assignment3_Form
                             };
                             Invoke(inv3);
                         }
-                    
-                    
-
+                        buffer.ReleaseMutex();
                     }
                     else
                     {
@@ -436,9 +420,6 @@ namespace Assignment3_Form
                 continueIca = false;
 
 
-
-
-
                 if (continueCoop && id == "coop")
                 {
                     Thread.Sleep(2000);
@@ -459,7 +440,6 @@ namespace Assignment3_Form
                 continueCoop = false;
 
 
-
                 if (continueCity && id == "cityGross")
                 {
                     Thread.Sleep(2000);
@@ -477,30 +457,32 @@ namespace Assignment3_Form
                 {
                     semaphoreConsumer.Release();
                 }
-                continueCity = false;
-
-
-                
+                continueCity = false;             
 
             }
             Thread.Sleep(2000);
             MethodInvoker inv6 = delegate
             {
+                //We're now out of the while loop and we adjust the status accordingly, we also make the buttons right and check if its full, if it is then we empty it.
                 if (id == "ica")
                 {
                     lblIcaStatus.Text = "Waiting";
-                    
+                    btnStartIca.Enabled = true;
+                    btnStopIca.Enabled = false;
                 }
                 else if (id == "coop")
                 {
                     lblCoopStatus.Text = "Waiting";
+                    btnStartCoop.Enabled = true;
+                    btnStopCoop.Enabled = false;
+
                 }
                 else if (id == "cityGross")
                 {
                     lblCityStatus.Text = "Waiting";
+                    btnStartCity.Enabled = true;
+                    btnStopCity.Enabled = false;
                 }
-               
-
 
                 if (storage.Count > 0 && (tempMaxNumber <= currentItems ||
                     tempMaxWeight <= currentWeights + storage[storage.Count - 1].weight ||
@@ -532,9 +514,6 @@ namespace Assignment3_Form
         }
 
         
-
-
-
 
         /// <summary>
         /// Start scan producer
@@ -596,7 +575,6 @@ namespace Assignment3_Form
             scan = false;
             btnStopScan.Enabled = false;
             btnStartScan.Enabled = true;
-
         }
         
         private void btnStart_Click(object sender, EventArgs e)
@@ -652,7 +630,6 @@ namespace Assignment3_Form
         /// <param name="e"></param>
         private void btnStopIca_Click(object sender, EventArgs e)
         {
-            ica = false;
             btnStartIca.Enabled = true;
             btnStopIca.Enabled = false;
         }
@@ -682,7 +659,6 @@ namespace Assignment3_Form
             coop = false;
             btnStartCoop.Enabled = true;
             btnStopCoop.Enabled = false;
-
         }
 
         /// <summary>
