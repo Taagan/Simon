@@ -630,6 +630,8 @@ namespace Assignment3_Form
         /// <param name="e"></param>
         private void btnStopIca_Click(object sender, EventArgs e)
         {
+            ica = false;
+            chkIcaCont.Checked = false;
             btnStartIca.Enabled = true;
             btnStopIca.Enabled = false;
         }
@@ -657,6 +659,7 @@ namespace Assignment3_Form
         private void btnStopCoop_Click(object sender, EventArgs e)
         {
             coop = false;
+            chkCoopCont.Checked = false;
             btnStartCoop.Enabled = true;
             btnStopCoop.Enabled = false;
         }
@@ -684,6 +687,7 @@ namespace Assignment3_Form
         private void btnStopCity_Click(object sender, EventArgs e)
         {
             cityGross = false;
+            chkCityCont.Checked = false;
             btnStartCity.Enabled = true;
             btnStopCity.Enabled = false;
         }
